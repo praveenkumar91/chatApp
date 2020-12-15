@@ -749,7 +749,6 @@ function showMessagePopup(data){
     setTimeout(() => {
         element.fadeOut(400);   
     }, 5000);
-    refreshMessagesBadge();
 }
 
 function outputNotificationList(notifications, container) {
