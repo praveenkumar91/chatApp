@@ -155,7 +155,7 @@ router.post("/coverPhoto", upload.single("croppedImage"), async (req, res, next)
             console.error(err);
             fs.unlinkSync(filename)
         } 
-        //console.log('Upload file saved to ', filename)
+        console.log('Upload file saved to ', filename)
     })
 
     req.session.user = await User.findByIdAndUpdate(req.session.user._id, { coverPhoto: filePath, coverPhotoBuffer: req.file.buffer }, { new: true})
