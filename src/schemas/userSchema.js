@@ -67,6 +67,12 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	}],
+	profilePicBuffer:{
+		type: Buffer
+	},
+	coverPhotoBuffer:{
+		type: Buffer
+	}
 
 },{
 	timestamps:true

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const uniqid = require('uniqid');
 const User = require('../../schemas/userSchema');
 const Post = require('../../schemas/PostSchema');
 const Notification = require('../../schemas/NotificationsSchema');
@@ -11,7 +12,13 @@ const router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: false}));
 
-const upload = multer({ dest: "uploads/"});
+const upload = multer({ 
+    dest: "uploads/",
+	limits:{
+		fileSize: 1000000
+    },
+    storage: multer.memoryStorage()
+})
 
 router.get("/", async (req, res, next) => {
     var searchObj = req.query;
@@ -114,19 +121,22 @@ router.post("/profilePicture", upload.single("croppedImage"), async (req, res, n
         consol.log("No file uploaded with ajax request");
         return res.sendStatus(400)
     }
+    
+    var filePath = `/uploads/images/profilePic_${uniqid()}.png`;
+    var filename = path.join(__dirname,`../../..${filePath}`);
 
-    var filePath = `/uploads/images/${req.file.filename}.png`;
-    var tempPath = req.file.path;
-    var targetPath = path.join(__dirname, `../../../${filePath}`)
-    fs.rename(tempPath,targetPath,async error=>{
-        if(error!=null){
-            console.log(error);
-            return res.sendStatus(400);
-        }
+    const fileContents = Buffer.from(req.file.buffer, 'base64');
+    
+    fs.writeFile(filename, fileContents, (err) => {
+        if (err) {
+            console.error(err);
+            fs.unlinkSync(filename)
+        } 
+        console.log('Upload file saved to ', filename)
+    })
 
-        req.session.user = await User.findByIdAndUpdate(req.session.user._id, { profilePic: filePath}, { new: true})
-        res.sendStatus(204); 
-    });
+    req.session.user = await User.findByIdAndUpdate(req.session.user._id, { profilePic: filePath, profilePicBuffer: req.file.buffer }, { new: true})
+    res.sendStatus(204); 
 });
 
 router.post("/coverPhoto", upload.single("croppedImage"), async (req, res, next) => {
@@ -135,18 +145,21 @@ router.post("/coverPhoto", upload.single("croppedImage"), async (req, res, next)
         return res.sendStatus(400)
     }
 
-    var filePath = `/uploads/images/${req.file.filename}.png`;
-    var tempPath = req.file.path;
-    var targetPath = path.join(__dirname, `../../../${filePath}`)
-    fs.rename(tempPath,targetPath,async error=>{
-        if(error!=null){
-            console.log(error);
-            return res.sendStatus(400);
-        }
+    var filePath = `/uploads/images/coverPhoto_${uniqid()}.png`;
+    var filename = path.join(__dirname,`../../..${filePath}`);
 
-        req.session.user = await User.findByIdAndUpdate(req.session.user._id, { coverPhoto: filePath}, { new: true})
-        res.sendStatus(204); 
-    });
+    const fileContents = Buffer.from(req.file.buffer, 'base64');
+    
+    fs.writeFile(filename, fileContents, (err) => {
+        if (err) {
+            console.error(err);
+            fs.unlinkSync(filename)
+        } 
+        //console.log('Upload file saved to ', filename)
+    })
+
+    req.session.user = await User.findByIdAndUpdate(req.session.user._id, { coverPhoto: filePath, coverPhotoBuffer: req.file.buffer }, { new: true})
+    res.sendStatus(204); 
 });
 
 module.exports = router;

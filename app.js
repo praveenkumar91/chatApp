@@ -45,7 +45,7 @@ app.use("/register", registerRoute);
 app.use("/logout", logutRoute);
 app.use("/posts",middleware.requireLogin, postRoute);
 app.use("/profile",middleware.requireLogin, profileRoute);
-app.use("/uploads", uploadsRoute);
+app.use("/uploads",middleware.requireLogin, uploadsRoute);
 app.use("/search",middleware.requireLogin, searchRoute);
 app.use("/messages",middleware.requireLogin, messageRoute);
 app.use("/notifications",middleware.requireLogin, notificationsRoute);
