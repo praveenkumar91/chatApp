@@ -126,7 +126,7 @@ router.post("/profilePicture", upload.single("croppedImage"), async (req, res, n
     var filename = path.join(__dirname,`../../..${filePath}`);
 
     const fileContents = Buffer.from(req.file.buffer, 'base64');
-    
+    console.log("filename on upload ",filename);
     fs.writeFile(filename, fileContents, (err) => {
         if (err) {
             console.error(err);

@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/images/:path", (req, res, next) => {
 
     const filename = path.join(__dirname,`../../uploads/images/${req.params.path}`);
-
+    console.log(filename);
     if(fs.existsSync(filename)){
         res.sendFile(filename);
     }else{
