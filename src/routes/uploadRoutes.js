@@ -6,14 +6,16 @@ const User = require('../schemas/userSchema');
 const app = express();
 const router = express.Router();
 
-router.get("/images/:path", (req, res, next) => {
+router.get("/images/:path", async (req, res, next) => {
 
     const filename = path.join(__dirname,`../../uploads/images/${req.params.path}`);
     if(fs.existsSync(filename)){
         res.sendFile(filename);
     }else{
         if(req.params.path.includes('profilePic_')){
-            const fileContents = Buffer.from(req.session.user.profilePicBuffer, 'base64');
+            var userId = req.session.user._id;
+            const user = await User.findById(userId);
+            const fileContents = Buffer.from(user.profilePicBuffer, 'base64');
             fs.writeFile(filename, fileContents, (err) => {
                 if (err) {
                     console.error(err);
@@ -23,7 +25,9 @@ router.get("/images/:path", (req, res, next) => {
                 res.sendFile(filename);
             })
         }else if(req.params.path.includes('coverPhoto_')){
-            const fileContents = Buffer.from(req.session.user.coverPhotoBuffer, 'base64');
+            var userId = req.session.user._id;
+            const user = await User.findById(userId);
+            const fileContents = Buffer.from(user.coverPhotoBuffer, 'base64');
             fs.writeFile(filename, fileContents, (err) => {
                 if (err) {
                     console.error(err);
