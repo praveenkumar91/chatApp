@@ -122,7 +122,7 @@ router.post("/profilePicture", upload.single("croppedImage"), async (req, res, n
         return res.sendStatus(400)
     }
     
-    var filePath = `/uploads/images/profilePic_${uniqid()}.png`;
+    var filePath = `/uploads/images/profilePic_${req.session.user._id}_${uniqid()}.png`;
     var filename = path.join(__dirname,`../../..${filePath}`);
 
     const fileContents = Buffer.from(req.file.buffer, 'base64');
@@ -145,7 +145,7 @@ router.post("/coverPhoto", upload.single("croppedImage"), async (req, res, next)
         return res.sendStatus(400)
     }
 
-    var filePath = `/uploads/images/coverPhoto_${uniqid()}.png`;
+    var filePath = `/uploads/images/coverPhoto_${req.session.user._id}_${uniqid()}.png`;
     var filename = path.join(__dirname,`../../..${filePath}`);
 
     const fileContents = Buffer.from(req.file.buffer, 'base64');
