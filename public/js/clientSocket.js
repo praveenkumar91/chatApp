@@ -2,7 +2,7 @@ var connected = false;
 
 const socket = io()
 
-socket.emit("setup",userLoggedIn);
+socket.emit("setup",userLoggedIn._id);
 
 socket.on("connected",()=>{
     connected = true;

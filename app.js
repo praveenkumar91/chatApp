@@ -4,11 +4,17 @@ const app = express();
 const port = process.env.PORT;
 const middleware = require('./middleware')
 const path = require('path')
+const http = require('http')
+const socketio = require('socket.io')
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
-const server = app.listen(port, () => console.log("Server listening on port " + port));
-const io = require('socket.io')(server, { pingTimeout: 60000 });
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+
+server.listen(port, () => {
+    console.log(`Server is up on port ${port}!`)
+})
 
 app.set("view engine", "pug");
 app.set("views", "views");
@@ -70,8 +76,8 @@ app.get("/", middleware.requireLogin, (req, res, next) => {
 
 io.on("connection",(socket)=>{
     
-    socket.on('setup', userData => {
-        socket.join(userData._id);
+    socket.on('setup', (userId)=> {
+        socket.join(userId);
         socket.emit("connected");
     });
 

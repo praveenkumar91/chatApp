@@ -78,6 +78,13 @@ const userSchema = new mongoose.Schema({
 	timestamps:true
 });
 
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject();
+    delete userObject.profilePicBuffer;
+    delete userObject.coverPhotoBuffer;
+    return userObject;
+}
 
 userSchema.statics.findByCredentials = async (username, password)=>{
 	

@@ -678,7 +678,7 @@ function getOtherChatUsers(users) {
 }
 
 function messageReceived(newMessage) {
-    if($('[data-room="${newMessage.chat._id}"]').length == 0) {
+    if($(`[data-room="${newMessage.chat._id}"]`).length == 0) {
         showMessagePopup(newMessage);
     }
     else {
