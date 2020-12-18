@@ -145,12 +145,16 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
     var isMine = message.sender._id == userLoggedIn._id;
     var liClassName = isMine ? "mine" : "theirs";
 
+    var timestamp = timeDifference(new Date(), new Date(message.createdAt));
+
     var nameElement = "";
     if(isFirst) {
         liClassName += " first";
 
         if(!isMine) {
-            nameElement = `<span class='senderName'>${senderName}</span>`;
+            nameElement = `<span class='senderName'>${senderName} ${timestamp}</span>`;
+        }else {
+            nameElement = `<span class='senderName'>${timestamp}</span>`;
         }
     }
 
